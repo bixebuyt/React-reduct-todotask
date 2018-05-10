@@ -1,0 +1,12 @@
+.App-header {
+  text-align: center;
+}
+.panel-body span {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  margin-right: 20px;
+}
+.btn-success {
+  margin-right: 20px;
+}

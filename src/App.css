@@ -1,0 +1,21 @@
+/*--- Custorm -----*/
+.btn.btn-primary {
+  margin-right: 20px;
+}
+.panel-heading {
+  position: relative;
+}
+.panel-heading img{
+  width: 10px;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.panel-heading img:hover {
+  opacity: 0.7;
+}
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
