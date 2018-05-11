@@ -12,8 +12,8 @@ class TaskItem extends Component {
               <td>{index}</td>
               <td>{task.name}</td>
               <td className="text-center">
-                <span onClick={this.handleUpdateStt} className={ task.stt === 'true' ? 'label label-success' : 'label label-warning' } >
-                    {task.stt === 'true' ? 'Kích hoạt' : 'Ẩn'}
+                <span onClick={this.handleUpdateStt} className={ task.stt === true ? 'label label-success' : 'label label-warning' } >
+                    {task.stt === true ? 'Kích hoạt' : 'Ẩn'}
                 </span>
               </td>
               <td className="text-center">

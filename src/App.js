@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import TaskForm from './components/TaskForm';
 import Control from './components/Control';
 import TaskList from './components/TaskList';
+import _ from 'lodash';
 import './App.css';
 
 class App extends Component {
@@ -24,17 +25,17 @@ class App extends Component {
       {
         id: uuid(),
         name: 'Angular',
-        stt: 'true'
+        stt: true
       },
       {
         id: uuid(),
         name: 'React Native',
-        stt: 'true'
+        stt: true
       },
       {
         id: uuid(),
         name: 'VueJs',
-        stt: 'false'
+        stt: false
       }
     ];
     this.setState({
@@ -67,8 +68,15 @@ class App extends Component {
     });
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }
-  onUpdateStt = (datas) => {
-    console.log(datas);
+  onUpdateStt = (id) => {
+    var tasks = this.state.tasks;
+    var task = _.filter(tasks, function(e) {
+        return e.id === id;
+    });
+    task['stt'] = !task['stt'];
+    this.setState({
+      tasks: task
+    })
   }
   render() {
     var tasks = this.state.tasks;
