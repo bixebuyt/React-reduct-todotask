@@ -10,6 +10,8 @@ class TaskList extends Component {
                 index={index}
                 task={task}
                 onUpdateStt = {this.props.onUpdateStt}
+                deleteWork = {this.props.deleteWork}
+                onUpdate = {this.props.onUpdate}
               />
     });
     return (

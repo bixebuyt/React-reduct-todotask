@@ -4,6 +4,12 @@ class TaskItem extends Component {
   handleUpdateStt = () => {
     this.props.onUpdateStt(this.props.task.id)
   }
+  handleDeleteWork = () => {
+    this.props.deleteWork(this.props.task.id);
+  }
+  handleUpdate = () => {
+    this.props.onUpdate(this.props.task.id);
+  }
   render() {
     var task = this.props.task;
     var index = this.props.index + 1;
@@ -17,11 +23,11 @@ class TaskItem extends Component {
                 </span>
               </td>
               <td className="text-center">
-                  <button type="button" className="btn btn-warning">
+                  <button onClick = {this.handleUpdate} type="button" className="btn btn-warning">
                       <span className="fa fa-pencil mr-5"></span>Sửa
                   </button>
                   &nbsp;
-                  <button type="button" className="btn btn-danger">
+                  <button onClick = {this.handleDeleteWork} type="button" className="btn btn-danger">
                       <span className="fa fa-trash mr-5"></span>Xóa
                   </button>
               </td>

@@ -10,7 +10,8 @@ class App extends Component {
     super(props);
     this.state = {
       tasks: [],
-      isDisplayForm: true
+      isDisplayForm: false,
+      workEdit: null
     }
     this.onGenerateData = this.onGenerateData.bind(this);
   }
@@ -43,6 +44,7 @@ class App extends Component {
     });
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }
+  // Add tasks after windown reload //
   componentWillMount() {
     if ( localStorage && localStorage.getItem('tasks')) {
       var tasks = JSON.parse(localStorage.getItem('tasks'));
@@ -51,33 +53,78 @@ class App extends Component {
       })
     }
   }
+  // Close and Open Form //
   onCloseForm = () => {
     this.setState({
       isDisplayForm: !this.state.isDisplayForm
     })
   }
+  // Add Work //
   onSubmit = (data) => {
     var tasks = this.state.tasks;
     var uuid = require('uuid-random');
-    data.id = uuid();
-    if ( data.name !== '' ) {
-        tasks.push(data)
+    var idEdit = data.id;
+    if ( data.id !== '' ) {
+        var idEdit = data.id;
+        var index = _.findIndex(tasks, function(e) {
+            return e.id === idEdit;
+        });
+        var valStt = data.stt === "true" ? true : false;
+        tasks[index].name = data.name;
+        tasks[index].stt = valStt;
+        this.setState({
+          tasks: tasks
+        });
+    }else {
+      data.id = uuid();
+      if ( data.name !== '' ) {
+          tasks.push(data)
+      }
+      this.setState({
+        tasks: tasks
+      });
     }
-    this.setState({
-      tasks: tasks
-    });
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }
+  // Change status //
   onUpdateStt = (id) => {
     var tasks = this.state.tasks;
-    var task = _.filter(tasks, function(e) {
+    var index = _.findIndex(tasks, function(e) {
         return e.id === id;
     });
-    task['stt'] = !task['stt'];
+    tasks[index].stt = !tasks[index].stt;
     this.setState({
-      tasks: task
+      tasks: tasks
+    })
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }
+  // Delete Work //
+  deleteWork = (id) => {
+    var tasks = this.state.tasks;
+    var deleteItem = _.remove(tasks, function(o) {
+      return o.id !== id;
+    })
+    this.setState({
+      tasks: deleteItem
+    })
+    localStorage.setItem('tasks', JSON.stringify(deleteItem));
+  }
+  // Update Work //
+  onUpdate = (id) => {
+    var tasks = this.state.tasks;
+    var index = _.findIndex(tasks, function(e) {
+        return e.id === id;
+    });
+    var workEdit = tasks[index];
+    this.setState({
+      workEdit: workEdit,
+      isDisplayForm: true
     })
   }
+  // //
+   componentWillReceiveProps(nextProps) {
+     console.log(nextProps);
+   }
   render() {
     var tasks = this.state.tasks;
     var isDisplayForm = this.state.isDisplayForm;
@@ -86,6 +133,7 @@ class App extends Component {
       elmTaskForm = <TaskForm
                      onCloseForm={this.onCloseForm}
                      onSubmit={this.onSubmit}
+                     onWorkEdit = {this.state.workEdit}
                     />
     }
     return (
@@ -122,7 +170,9 @@ class App extends Component {
                             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                               <TaskList
                                 onUpdateStt = {this.onUpdateStt}
+                                deleteWork = {this.deleteWork}
                                 tasks={ tasks }
+                                onUpdate = { this.onUpdate }
                               />
                             </div>
                         </div>

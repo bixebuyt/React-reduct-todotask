@@ -4,6 +4,7 @@ class TaskForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: '',
       name: '',
       stt: false
     }
@@ -19,6 +20,16 @@ class TaskForm extends Component {
       [name]: value
     })
   }
+  componentWillMount() {
+    var onWorkEdit = this.props.onWorkEdit;
+    if ( this.props.onWorkEdit ) {
+        this.setState({
+          id: onWorkEdit.id,
+          name: onWorkEdit.name,
+          stt: onWorkEdit.stt
+        })
+    }
+  }
   handleClear = () => {
     this.setState({
       name: '',
@@ -29,11 +40,20 @@ class TaskForm extends Component {
     event.preventDefault();
     this.props.onSubmit(this.state);
   }
+  // //
+   componentWillReceiveProps(nextProps) {
+     this.setState({
+       id: nextProps.onWorkEdit.id,
+       name: nextProps.onWorkEdit.name,
+       stt: nextProps.onWorkEdit.stt
+     })
+   }
   render() {
+    var id = this.state.id;
     return (
         <div className="panel panel-warning">
             <div className="panel-heading">
-                <h3 className="panel-title">Thêm Công Việc</h3>
+                <h3 className="panel-title">{ id !== '' ? 'Sửa công việc' : 'Thêm công việc' }</h3>
                 <a onClick={this.onCloseForm}><img src="../../../assets/images/icon-close.png" alt="icon Close" /></a>
             </div>
             <div className="panel-body">
@@ -53,12 +73,12 @@ class TaskForm extends Component {
                       name="stt"
                       value={this.state.stt}
                       onChange={this.onChange} >
-                          <option value='true'>Kích Hoạt</option>
-                          <option value='false'>Ẩn</option>
+                          <option value={true}>Kích Hoạt</option>
+                          <option value={false}>Ẩn</option>
                     </select>
                     <br/>
                     <div className="text-center">
-                        <button type="submit" className="btn btn-warning">Thêm</button>&nbsp;
+                        <button type="submit" className="btn btn-primary">Thêm</button>&nbsp;
                         <button type="button" onClick={this.handleClear} className="btn btn-danger">Hủy Bỏ</button>
                     </div>
                 </form>
