@@ -2,6 +2,15 @@ import React, { Component } from 'react';
 import TaskItem from './TaskItem';
 
 class TaskList extends Component {
+  constructor(props){
+    super(props);
+      this.state = {
+        valInput: ""
+    }
+  }
+  handleChange = (event) => {
+    this.props.inputFilter(event.target.value)
+  }
   render() {
     var tasks = this.props.tasks;
     var elmTasks = tasks.map((task, index) => {
@@ -29,7 +38,7 @@ class TaskList extends Component {
                   <tr>
                       <td></td>
                       <td>
-                          <input type="text" className="form-control" />
+                          <input type="text" onChange={this.handleChange} className="form-control" />
                       </td>
                       <td>
                           <select className="form-control">

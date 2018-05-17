@@ -11,7 +11,8 @@ class App extends Component {
     this.state = {
       tasks: [],
       isDisplayForm: false,
-      workEdit: null
+      workEdit: null,
+      updatedList : []
     }
     this.onGenerateData = this.onGenerateData.bind(this);
   }
@@ -25,17 +26,17 @@ class App extends Component {
     var tasks = [
       {
         id: uuid(),
-        name: 'Angular',
+        name: 'angular',
         stt: true
       },
       {
         id: uuid(),
-        name: 'React Native',
+        name: 'react native',
         stt: true
       },
       {
         id: uuid(),
-        name: 'VueJs',
+        name: 'vueJs',
         stt: false
       }
     ];
@@ -121,10 +122,20 @@ class App extends Component {
       isDisplayForm: true
     })
   }
-  // //
-   componentWillReceiveProps(nextProps) {
-     console.log(nextProps);
-   }
+  // Input Filter //
+  onInputFilter = (result) => {
+    var updatedList = this.state.updatedList;
+    var tasks = this.state.tasks;
+    var valueInput = result;
+    updatedList =
+      tasks.filter(function(tasks){
+          return tasks.name.indexOf(valueInput) !== -1;
+      });
+    console.log(updatedList);
+    this.setState({
+      tasks: updatedList
+    });
+  }
   render() {
     var tasks = this.state.tasks;
     var isDisplayForm = this.state.isDisplayForm;
@@ -171,8 +182,9 @@ class App extends Component {
                               <TaskList
                                 onUpdateStt = {this.onUpdateStt}
                                 deleteWork = {this.deleteWork}
-                                tasks={ tasks }
+                                tasks= { tasks }
                                 onUpdate = { this.onUpdate }
+                                inputFilter = { this.onInputFilter }
                               />
                             </div>
                         </div>
