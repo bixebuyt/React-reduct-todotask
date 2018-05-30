@@ -12,7 +12,13 @@ class App extends Component {
       tasks: [],
       isDisplayForm: false,
       workEdit: null,
-      updatedList : []
+      updatedList : [],
+      filter: {
+        name: '',
+        stt: -1
+      },
+      valueSearch: '',
+      valueSort: ''
     }
     this.onGenerateData = this.onGenerateData.bind(this);
   }
@@ -123,21 +129,72 @@ class App extends Component {
     })
   }
   // Input Filter //
-  onInputFilter = (result) => {
-    var updatedList = this.state.updatedList;
-    var tasks = this.state.tasks;
-    var valueInput = result;
-    updatedList =
-      tasks.filter(function(tasks){
-          return tasks.name.indexOf(valueInput) !== -1;
-      });
-    console.log(updatedList);
+  onFilter = (filterName, filterStt) => {
+    filterStt = parseInt(filterStt);
     this.setState({
-      tasks: updatedList
-    });
+      filter : {
+        name: filterName,
+        stt: filterStt
+      }
+    })
+  }
+  // handleSeach //
+  handleSeach = (valueSearch) => {
+    this.setState({
+      valueSearch: valueSearch
+    })
+  }
+  // handleSort //
+  handleSort = (event) => {
+    if ( event === '1' || event === '0' ) {
+      event = parseInt(event);
+    }
+    if ( event === 0 ) {
+      event = 'desc';
+    }
+    else if ( event === 1 ) {
+      event = 'asc';
+    }
+    this.setState({
+      valueSort: event
+    })
   }
   render() {
-    var tasks = this.state.tasks;
+    var {tasks,filter,valueSearch, valueSort} = this.state;
+    // handleSort //
+    console.log(valueSort);
+    var tasks = _.orderBy(tasks, [ (typeof valueSort) === 'string' ? 'name': 'stt' ], [valueSort]);
+    // HANDLE FILTER FORM //
+    if (filter) {
+      if (filter.name) {
+        var tasks = tasks.filter(function(item) {
+          var valueItem = item.name;
+          return valueItem.toLowerCase().indexOf(filter.name.toLowerCase()) > -1
+        })
+      }
+      if (filter.stt != null) {
+        var tasks = tasks.filter(function(item) {
+            var valueItem = item.stt;
+            if (filter.stt === -1) {
+                return tasks
+            }else if (filter.stt === 0) {
+              return item.stt === false
+            }else if (filter.stt === 1) {
+              return item.stt === true
+            }
+        })
+      }
+    }
+    // HANDLE SEARCH FORM //
+    if (valueSearch != null) {
+      var tasks = tasks.filter(function(item) {
+        var valueSearchName = item.name;
+        return valueSearchName.toLowerCase().indexOf(valueSearch.toLowerCase()) > -1
+      })
+    }else if (valueSearch === null) {
+      tasks = tasks
+    }
+    // HANDLE SHOW TASK FORM //
     var isDisplayForm = this.state.isDisplayForm;
     var elmTaskForm = "";
     if ( isDisplayForm ) {
@@ -172,7 +229,10 @@ class App extends Component {
                         <br />
                         <br />
                         <div className="row mt-15">
-                            <Control />
+                            <Control
+                              handleSeach = {this.handleSeach}
+                              handleSort = {this.handleSort}
+                            />
                             <br />
                             <br />
                             <br />
@@ -184,7 +244,7 @@ class App extends Component {
                                 deleteWork = {this.deleteWork}
                                 tasks= { tasks }
                                 onUpdate = { this.onUpdate }
-                                inputFilter = { this.onInputFilter }
+                                onFilter = { this.onFilter }
                               />
                             </div>
                         </div>
